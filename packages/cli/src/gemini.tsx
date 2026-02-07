@@ -89,6 +89,7 @@ import { SessionStatsProvider } from './ui/contexts/SessionContext.js';
 import { VimModeProvider } from './ui/contexts/VimModeContext.js';
 import { KeypressProvider } from './ui/contexts/KeypressContext.js';
 import { useKittyKeyboardProtocol } from './ui/hooks/useKittyKeyboardProtocol.js';
+import { useVimCursorShape } from './ui/hooks/useVimCursorShape.js';
 import {
   relaunchAppInChildProcess,
   relaunchOnExitCode,
@@ -217,6 +218,7 @@ export async function startInteractiveUI(
   // Create wrapper component to use hooks inside render
   const AppWrapper = () => {
     useKittyKeyboardProtocol();
+    useVimCursorShape();
     return (
       <SettingsContext.Provider value={settings}>
         <KeypressProvider

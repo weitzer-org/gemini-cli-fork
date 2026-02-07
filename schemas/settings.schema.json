@@ -42,6 +42,13 @@
           "default": false,
           "type": "boolean"
         },
+        "vimModeCursorShape": {
+          "title": "Vim Mode Cursor Shape",
+          "description": "Enable cursor shape changes in vim mode",
+          "markdownDescription": "Enable cursor shape changes in vim mode\n\n- Category: `General`\n- Requires restart: `no`\n- Default: `false`",
+          "default": false,
+          "type": "boolean"
+        },
         "enableAutoUpdate": {
           "title": "Enable Auto Update",
           "description": "Enable automatic updates.",
