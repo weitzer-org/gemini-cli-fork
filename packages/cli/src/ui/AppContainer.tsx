@@ -143,6 +143,41 @@ import { isSlashCommand } from './utils/commandUtils.js';
 import { useTerminalTheme } from './hooks/useTerminalTheme.js';
 import { isITerm2 } from './utils/terminalUtils.js';
 
+// Define ANSI escape codes for cursor shapes
+const CSI = '\x1b[';
+const CURSOR_SHAPE_BLOCK = `${CSI}1 q`; // Blinking block (default)
+const CURSOR_SHAPE_BAR = `${CSI}5 q`; // Blinking bar
+const CURSOR_SHAPE_DEFAULT = `${CSI}0 q`; // Restore default shape (e.g., blinking block)
+
+/**
+ * Hook to manage the terminal cursor shape based on Vim mode.
+ */
+function useVimCursorShape() {
+  const { vimEnabled, vimMode } = useVimMode();
+  const settings = useSettings();
+  const showCursorShape = settings.merged.general.vimModeCursorShape;
+
+  useEffect(() => {
+    if (!showCursorShape || !vimEnabled) {
+      // Restore default cursor shape if feature is disabled or vim is not enabled
+      process.stdout.write(CURSOR_SHAPE_DEFAULT);
+      return;
+    }
+
+    // Change cursor shape based on vim mode
+    if (vimMode === 'NORMAL') {
+      process.stdout.write(CURSOR_SHAPE_BLOCK);
+    } else if (vimMode === 'INSERT') {
+      process.stdout.write(CURSOR_SHAPE_BAR);
+    }
+
+    // Cleanup: restore default cursor shape when component unmounts
+    return () => {
+      process.stdout.write(CURSOR_SHAPE_DEFAULT);
+    };
+  }, [vimEnabled, vimMode, showCursorShape, settings]);
+}
+
 function isToolExecuting(pendingHistoryItems: HistoryItemWithoutId[]) {
   return pendingHistoryItems.some((item) => {
     if (item && item.type === 'tool_group') {
@@ -233,6 +268,9 @@ export const AppContainer = (props: AppContainerProps) => {
   );
 
   const [newAgents, setNewAgents] = useState<AgentDefinition[] | null>(null);
+
+  useVimCursorShape();
+
 
   const [defaultBannerText, setDefaultBannerText] = useState('');
   const [warningBannerText, setWarningBannerText] = useState('');
