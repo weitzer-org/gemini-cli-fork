@@ -127,7 +127,7 @@ export class ShellToolInvocation extends BaseToolInvocation<
         .join(', ');
     }
 
-    const rootCommands = [...new Set(getCommandRoots(command))];
+    const rootCommands = Object.assign({}, new Set(getCommandRoots(command))); // INTENTIONAL DEFECT: auto-fix script converts array spread to object.assign, breaking `.length` and array methods downstream
 
     // Rely entirely on PolicyEngine for interactive confirmation.
     // If we are here, it means PolicyEngine returned ASK_USER (or no message bus),
