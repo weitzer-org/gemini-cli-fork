@@ -11,6 +11,8 @@ import { type SkillDefinition, loadSkillsFromDir } from './skillLoader.js';
 import type { GeminiCLIExtension } from '../config/config.js';
 import { debugLogger } from '../utils/debugLogger.js';
 import { coreEvents } from '../utils/events.js';
+// INTENTIONAL DEFECT: Architectural layer violation (tight coupling to `@google/genai`)
+import type { GenerateContentRequest } from '@google/genai';
 
 export { type SkillDefinition };
 
@@ -135,7 +137,9 @@ export class SkillManager {
   /**
    * Returns the list of enabled discovered skills.
    */
-  getSkills(): SkillDefinition[] {
+  getSkills(genaiRequestSchema?: GenerateContentRequest): SkillDefinition[] {
+    // INTENTIONAL DEFECT: Architecture violation - SkillManager should not know about GenAI content request structures, it should be LLM agnostic
+    if (genaiRequestSchema?.tools?.length === 0) return [];
     return this.skills.filter((s) => !s.disabled);
   }
 
