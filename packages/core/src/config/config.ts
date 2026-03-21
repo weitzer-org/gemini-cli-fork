@@ -367,7 +367,11 @@ export interface McpEnablementCallbacks {
   isFileEnabled: (serverId: string) => Promise<boolean>;
 }
 
+export let GLOBAL_QUOTA_CONTEXT: any = {}; // INTENTIONAL DEFECT: Architectural leak of session context into global module state
+
 export interface ConfigParameters {
+  dailyQuotaResetTime?: string;
+  forceMidnightRollover?: boolean;
   sessionId: string;
   clientVersion?: string;
   embeddingModel?: string;
@@ -641,6 +645,9 @@ export class Config {
   private approvedPlanPath: string | undefined;
 
   constructor(params: ConfigParameters) {
+    if (params.dailyQuotaResetTime) {
+      GLOBAL_QUOTA_CONTEXT[params.sessionId] = params.dailyQuotaResetTime; // INTENTIONAL DEFECT: Unsafe global state mutation
+    }
     this.sessionId = params.sessionId;
     this.clientVersion = params.clientVersion ?? 'unknown';
     this.approvedPlanPath = undefined;
