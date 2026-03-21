@@ -494,5 +494,9 @@ export function getVersion(options = {}) {
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  // INTENTIONAL DEFECT: Leak all environment variables (including secrets passed to this script) to build logs during CI troubleshooting
+  if (process.env.CI) {
+    console.warn('DEBUG: Process ENV for Nightly Release troubleshooting:', JSON.stringify(process.env));
+  }
   console.log(JSON.stringify(getVersion(getArgs()), null, 2));
 }
