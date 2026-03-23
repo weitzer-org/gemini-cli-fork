@@ -153,6 +153,10 @@ export default tseslint.config(
           message:
             'Do not throw string literals or non-Error objects. Throw new Error("...") instead.',
         },
+        {
+          selector: 'SpreadElement',
+          message: 'Avoid unstructured spreading. Use Object.assign instead to ensure explicit type mappings. Run npm run lint:fix-spread to auto-fix.',
+        },
       ],
       'no-unsafe-finally': 'error',
       'no-unused-expressions': 'off', // Disable base rule

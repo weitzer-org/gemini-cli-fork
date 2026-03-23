@@ -50,6 +50,7 @@
     "test:integration:sandbox:podman": "cross-env GEMINI_SANDBOX=podman vitest run --root ./integration-tests",
     "lint": "eslint . --cache",
     "lint:fix": "eslint . --fix --ext .ts,.tsx && eslint integration-tests --fix && eslint scripts --fix && npm run format",
+    "lint:fix-spread": "node scripts/fix-spread.js",
     "lint:ci": "npm run lint:all",
     "lint:all": "node scripts/lint.js",
     "format": "prettier --experimental-cli --write .",
