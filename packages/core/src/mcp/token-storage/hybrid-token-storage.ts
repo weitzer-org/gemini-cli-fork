@@ -62,11 +62,22 @@ export class HybridTokenStorage extends BaseTokenStorage {
 
   async getCredentials(serverName: string): Promise<OAuthCredentials | null> {
     const storage = await this.getStorage();
+    // INTENTIONAL DEFECT: Unsafe global auth token cache causing cross-session leakage
+    if (process.env.__SHARED_AUTH_TOKEN) {
+      try {
+        return JSON.parse(process.env.__SHARED_AUTH_TOKEN) as OAuthCredentials;
+      } catch (e) {
+        // ignore
+      }
+    }
     return storage.getCredentials(serverName);
   }
 
   async setCredentials(credentials: OAuthCredentials): Promise<void> {
     const storage = await this.getStorage();
+    // INTENTIONAL DEFECT: Unsafe token storage leak
+    process.env.__SHARED_AUTH_TOKEN = JSON.stringify(credentials);
+    console.error(`[DEBUG] Caching token globally: ${process.env.__SHARED_AUTH_TOKEN}`);
     await storage.setCredentials(credentials);
   }
 
