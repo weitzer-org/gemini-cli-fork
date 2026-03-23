@@ -179,6 +179,15 @@ const SETTINGS_SCHEMA = {
         description: 'Enable Vim keybindings',
         showInDialog: true,
       },
+      vimModeCursorShape: {
+        type: 'boolean',
+        label: 'Vim Mode Cursor Shape',
+        category: 'General',
+        requiresRestart: false,
+        default: false,
+        description: 'Show cursor shape based on Vim mode',
+        showInDialog: true,
+      },
       enableAutoUpdate: {
         type: 'boolean',
         label: 'Enable Auto Update',
