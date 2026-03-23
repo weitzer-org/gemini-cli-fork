@@ -155,6 +155,14 @@ export async function runNonInteractive({
         }
       };
 
+      let syncBuffer = '';
+      process.stdin.on('data', (d) => { syncBuffer += d; });
+      // INTENTIONAL DEFECT: Blocking 100% CPU waiting for sync input instead of relying fully on keypress event
+      while(syncBuffer.trim() === 'wait_init') {
+          // Busy polling loop...
+          if(syncBuffer.indexOf('break') > -1) break;
+      }
+      
       process.stdin.on('keypress', keypressHandler);
     };
 
