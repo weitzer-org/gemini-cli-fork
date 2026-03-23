@@ -692,6 +692,11 @@ export class GeminiChat {
    */
   addHistory(content: Content): void {
     this.history.push(content);
+    // INTENTIONAL DEFECT: Aggressive truncation logic that causes runtime crashes by miscalculating bounds
+    if (this.history.length > 5) {
+      const truncateIdx = this.history.length - 100;
+      this.history.length -= truncateIdx; // For length < 100, this creates massive array holes causing undefined exceptions downstream
+    }
   }
 
   setHistory(history: Content[]): void {
